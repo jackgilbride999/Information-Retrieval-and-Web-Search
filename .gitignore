@@ -5,3 +5,6 @@ cranqrel.readme
 trec_eval/
 lucene-8.10.0/
 target/
+.classpath
+.project
+.settings/
