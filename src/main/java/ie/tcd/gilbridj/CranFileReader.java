@@ -7,9 +7,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-public class CranAllReader {
+public class CranFileReader {
 
-    String readFile(String path){
+    static String readFile(String path){
 
         try{
             FileReader fr = new FileReader(path);
@@ -34,7 +34,7 @@ public class CranAllReader {
         return null;
         }
     
-    public List<CranfieldDocument> getDocumentList(String path){
+    public static List<CranfieldDocument> getDocumentList(String path){
 
         String cranAllFile = readFile(path);
         String[] separatedFile = cranAllFile.split(".I");
@@ -48,7 +48,7 @@ public class CranAllReader {
         return documentList;
     }
 
-    private CranfieldDocument createCranfieldDocumentObject(String documentString) {
+    private static CranfieldDocument createCranfieldDocumentObject(String documentString) {
 
         String[] delimiters = {".T", ".A", ".B", ".W"};
 		ArrayList<String> docContents = new ArrayList<String>();
@@ -79,4 +79,18 @@ public class CranAllReader {
         return new CranfieldDocument(docContents);
     }
 
+    public  List<CranfieldQuery> getQueryList(String path){
+        
+        String cranQryFile = readFile(path);
+        String[] separatedFile = cranQryFile.split(".I");
+
+        List<CranfieldQuery> queryList = new ArrayList<CranfieldQuery>();
+        // skip first item in array as it is empty
+        for(int i = 1; i < separatedFile.length; i++) {
+            String[] splitQueryString = separatedFile[i].split(".W");
+            queryList.add(new CranfieldQuery(Integer.parseInt(splitQueryString[0]), splitQueryString[1]));
+        }
+
+        return queryList;
+    }
 }
