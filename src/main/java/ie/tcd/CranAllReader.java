@@ -39,22 +39,18 @@ public class CranAllReader {
     public List<CranfieldDocument> getDocumentList(String path){
 
         String cranAllFile = readFile(path);
-
         String[] separatedFile = cranAllFile.split(".I");
 
         List<CranfieldDocument> documentList = new ArrayList<CranfieldDocument>();
         // skip first item in array as it is empty
         for(int i = 1; i < separatedFile.length; i++) {
-            // TODO:
+            documentList.add(createCranfieldDocumentObject(separatedFile[i]));
         }
 
         return documentList;
     }
 
     private CranfieldDocument createCranfieldDocumentObject(String documentString) {
-
-        int documentId;
-        String title, authors, bibliography, words;
 
         String[] delimiters = {".T", ".A", ".B", ".W"};
 		ArrayList<String> docContents = new ArrayList<String>();
@@ -80,13 +76,9 @@ public class CranAllReader {
                 docContents.add(documentString.split(delimiters[i])[0]);
                 docContents.add(documentString.split(delimiters[i])[1]);
             }
-            
-            return new CranfieldDocument(docContents);
         }
 
-        
-
-
+        return new CranfieldDocument(docContents);
     }
 
 }
