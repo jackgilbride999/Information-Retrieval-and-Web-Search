@@ -3,10 +3,8 @@ package ie.tcd.gilbridj;
 import java.io.IOException;
 
 import java.util.List;
-import java.util.ArrayList;
 
 import java.nio.file.Paths;
-import java.nio.file.Files;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;

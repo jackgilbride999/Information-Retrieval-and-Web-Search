@@ -3,9 +3,9 @@ package ie.tcd.gilbridj;
 import java.io.IOException;
 
 import java.util.Scanner;
+import java.util.List;
 
 import java.nio.file.Paths;
-//import java.nio.file.Files;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -49,15 +49,16 @@ public class QueryIndex
 		
 		// Create the query parser. The default search field is "content", but
 		// we can use this to search across any field
-		QueryParser parser = new QueryParser("content", analyzer);
+		QueryParser parser = new QueryParser("contents", analyzer);
+
+		List<CranfieldQuery> queryList = CranFileReader.getQueryList(args[1]);
 		
 		String queryString = "";
-		Scanner scanner = new Scanner(System.in);
-		do
+	//	Scanner scanner = new Scanner(System.in);
+		for(int i=0; i < queryList.size(); i++)
 		{
-			// trim leading and trailing whitespace from the query
-			queryString = queryString.trim();
-
+			queryString = queryList.get(i).getText().replace('?', ' ').trim();
+			System.out.println(queryString);
 			// if the user entered a querystring
 			if (queryString.length() > 0)
 			{
@@ -69,10 +70,10 @@ public class QueryIndex
 
 				// Print the results
 				System.out.println("Documents: " + hits.length);
-				for (int i = 0; i < hits.length; i++)
+				for (int j = 0; j < hits.length; j++)
 				{
-					Document hitDoc = isearcher.doc(hits[i].doc);
-					System.out.println(i + ") " + hitDoc.get("filename") + " " + hits[i].score);
+					Document hitDoc = isearcher.doc(hits[j].doc);
+					System.out.println(j + ") " + hitDoc.get("title") + " " + hits[j].score);
 				}
 
 				System.out.println();	
@@ -80,11 +81,9 @@ public class QueryIndex
 			
 			// prompt the user for input and quit the loop if they escape
 			System.out.print(">>> ");
-			queryString = scanner.nextLine();
-		} while (!queryString.equals("\\q"));
+		}
 		
 		// close everything and quit
-		scanner.close();
 		ireader.close();
 		directory.close();
 	}
