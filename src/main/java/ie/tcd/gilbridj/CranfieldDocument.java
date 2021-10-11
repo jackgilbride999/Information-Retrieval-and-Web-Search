@@ -20,7 +20,7 @@ public class CranfieldDocument {
 
     public CranfieldDocument(ArrayList<String> docContents) {
         this(
-            Integer.parseInt(docContents.get(0)), 
+            Integer.parseInt(docContents.get(0).trim()), 
             docContents.get(1), 
             docContents.get(2), 
             docContents.get(3), 

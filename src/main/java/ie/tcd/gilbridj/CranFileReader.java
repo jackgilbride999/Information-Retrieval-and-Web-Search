@@ -9,6 +9,11 @@ import java.io.IOException;
 
 public class CranFileReader {
 
+    public static void main(String[] args){
+        getDocumentList(args[0]);
+        getQueryList(args[1]);
+    }
+
     static String readFile(String path){
 
         try{
@@ -22,7 +27,7 @@ public class CranFileReader {
                 sb.append(" ");
             }
         
-            String fileContent = br.toString();
+            String fileContent = sb.toString();
             fr.close();
             br.close();
             return fileContent;
@@ -43,7 +48,9 @@ public class CranFileReader {
         // skip first item in array as it is empty
         for(int i = 1; i < separatedFile.length; i++) {
             documentList.add(createCranfieldDocumentObject(separatedFile[i]));
+            System.out.print(i);
         }
+        System.out.println("success");
 
         return documentList;
     }
@@ -79,7 +86,7 @@ public class CranFileReader {
         return new CranfieldDocument(docContents);
     }
 
-    public  List<CranfieldQuery> getQueryList(String path){
+    public static List<CranfieldQuery> getQueryList(String path){
         
         String cranQryFile = readFile(path);
         String[] separatedFile = cranQryFile.split(".I");
@@ -88,9 +95,10 @@ public class CranFileReader {
         // skip first item in array as it is empty
         for(int i = 1; i < separatedFile.length; i++) {
             String[] splitQueryString = separatedFile[i].split(".W");
-            queryList.add(new CranfieldQuery(Integer.parseInt(splitQueryString[0]), splitQueryString[1]));
+            queryList.add(new CranfieldQuery(Integer.parseInt(splitQueryString[0].trim()), splitQueryString[1]));
+            System.out.print(i);
         }
-
+        System.out.println("success");
         return queryList;
     }
 }
