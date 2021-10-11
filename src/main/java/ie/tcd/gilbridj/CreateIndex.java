@@ -2,6 +2,7 @@ package ie.tcd.gilbridj;
 
 import java.io.IOException;
 
+import java.util.List;
 import java.util.ArrayList;
 
 import java.nio.file.Paths;
@@ -17,26 +18,26 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.index.IndexWriterConfig.OpenMode;
  
 public class CreateIndex
 {
 	// Directory where the search index will be saved
-	private static String INDEX_DIRECTORY = "../index";
+	private static String INDEX_DIRECTORY = "./index";
 
 	public static void main(String[] args) throws IOException
 	{
 		// Make sure we were given something to index
-		if (args.length <= 0)
+		if (args.length <= 1)
 		{
-            System.out.println("Expected corpus as input");
+            System.out.println("Expected filenames as input");
             System.exit(1);            
         }
 
+		List<CranfieldDocument> documentList = CranFileReader.getDocumentList(args[0]);
+
 		// Analyzer that is used to process TextField
 		Analyzer analyzer = new StandardAnalyzer();
-		
-		// ArrayList of documents in the corpus
-		ArrayList<Document> documents = new ArrayList<Document>();
 
 		// Open the directory that contains the search index
 		Directory directory = FSDirectory.open(Paths.get(INDEX_DIRECTORY));
@@ -46,23 +47,19 @@ public class CreateIndex
 		config.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
 		IndexWriter iwriter = new IndexWriter(directory, config);
 		
-		for (String arg : args)
+		for(int i = 0; i < documentList.size(); i++)
 		{
-			// Load the contents of the file
-			System.out.printf("Indexing \"%s\"\n", arg);
-			String content = new String(Files.readAllBytes(Paths.get(arg)));
+			CranfieldDocument document = documentList.get(i);
+			Document luceneDocument = new Document();
 
-			// Create a new document and add the file's contents
-			Document doc = new Document();
-			doc.add(new StringField("filename", arg, Field.Store.YES));
-			doc.add(new TextField("content", content, Field.Store.YES));
+			luceneDocument.add(new StringField("id", String.valueOf(document.getDocumentId()), Field.Store.YES));
+			luceneDocument.add(new TextField("title", document.getTitle(), Field.Store.YES));
+			luceneDocument.add(new TextField("contents", document.getWords(), Field.Store.YES));
 
-			// Add the file to our linked list
-			documents.add(doc);
+			if (iwriter.getConfig().getOpenMode() == OpenMode.CREATE) {
+				iwriter.addDocument(luceneDocument);
+			}
 		}
-
-		// Write all the documents in the linked list to the search index
-		iwriter.addDocuments(documents);
 
 		// Commit everything and close
 		iwriter.close();

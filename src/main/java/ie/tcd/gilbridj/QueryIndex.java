@@ -29,7 +29,7 @@ public class QueryIndex
 {
 
 	// the location of the search index
-	private static String INDEX_DIRECTORY = "../index";
+	private static String INDEX_DIRECTORY = "./index";
 	
 	// Limit the number of search results we get
 	private static int MAX_RESULTS = 10;

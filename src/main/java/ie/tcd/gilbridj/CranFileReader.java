@@ -9,11 +9,6 @@ import java.io.IOException;
 
 public class CranFileReader {
 
-    public static void main(String[] args){
-        getDocumentList(args[0]);
-        getQueryList(args[1]);
-    }
-
     static String readFile(String path){
 
         try{
