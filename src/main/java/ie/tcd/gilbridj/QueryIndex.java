@@ -1,5 +1,7 @@
 package ie.tcd.gilbridj;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 
 import java.util.Scanner;
@@ -36,11 +38,8 @@ public class QueryIndex
 	
 	public static void main(String[] args) throws IOException, ParseException
 	{
-		// Analyzer used by the query parser.
-		// Must be the same as the one used when creating the index
+		// Analyzer used by the query parser. Must be the same as the one used when creating the index
 		Analyzer analyzer = new StandardAnalyzer();
-		
-		// Open the folder that contains our search index
 		Directory directory = FSDirectory.open(Paths.get(INDEX_DIRECTORY));
 		
 		// create objects to read and search across the index
@@ -51,15 +50,20 @@ public class QueryIndex
 		// we can use this to search across any field
 		QueryParser parser = new QueryParser("contents", analyzer);
 
+
+		FileWriter fw = new FileWriter("./results.txt", false);
+		BufferedWriter bw = new BufferedWriter(fw);
+
 		List<CranfieldQuery> queryList = CranFileReader.getQueryList(args[1]);
 		
 		String queryString = "";
-	//	Scanner scanner = new Scanner(System.in);
+		int queryId;
+
 		for(int i=0; i < queryList.size(); i++)
 		{
+			queryId = queryList.get(i).getQueryId();
 			queryString = queryList.get(i).getText().replace('?', ' ').trim();
-			System.out.println(queryString);
-			// if the user entered a querystring
+
 			if (queryString.length() > 0)
 			{
 				// parse the query with the parser
@@ -69,21 +73,21 @@ public class QueryIndex
 				ScoreDoc[] hits = isearcher.search(query, MAX_RESULTS).scoreDocs;
 
 				// Print the results
-				System.out.println("Documents: " + hits.length);
 				for (int j = 0; j < hits.length; j++)
 				{
 					Document hitDoc = isearcher.doc(hits[j].doc);
-					System.out.println(j + ") " + hitDoc.get("title") + " " + hits[j].score);
+					String result = (queryId + " Q0 " + hitDoc.get("id") + " " + (i + 1) + " " + hits[j].score + " STANDARD");
+					System.out.println(result);
+					bw.write(result);
+					bw.newLine();
 				}
-
-				System.out.println();	
 			}
 			
-			// prompt the user for input and quit the loop if they escape
 			System.out.print(">>> ");
 		}
 		
-		// close everything and quit
+		bw.close();
+		fw.close();
 		ireader.close();
 		directory.close();
 	}
