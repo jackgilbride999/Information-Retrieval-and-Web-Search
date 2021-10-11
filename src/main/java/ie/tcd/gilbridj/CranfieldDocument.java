@@ -1,5 +1,7 @@
 package ie.tcd.gilbridj;
 
+import java.util.ArrayList;
+
 public class CranfieldDocument {
     
     private int documentId;
@@ -7,6 +9,24 @@ public class CranfieldDocument {
     private String authors;
     private String bibliograpy;
     private String words;
+
+    public CranfieldDocument(int documentId, String title, String authors, String bibliography, String words){
+        this.documentId = documentId;
+        this.title = title;
+        this.authors = authors;
+        this.bibliograpy = bibliography;
+        this.words = words;
+    }
+
+    public CranfieldDocument(ArrayList<String> docContents) {
+        this(
+            Integer.parseInt(docContents.get(0)), 
+            docContents.get(1), 
+            docContents.get(2), 
+            docContents.get(3), 
+            docContents.get(4)
+        );
+    }
 
     public int getDocumentId() {
         return documentId;
