@@ -10,8 +10,8 @@ import java.util.List;
 import java.nio.file.Paths;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
-
 import org.apache.lucene.document.Document;
 
 import org.apache.lucene.store.Directory;
@@ -22,6 +22,8 @@ import org.apache.lucene.index.DirectoryReader;
 
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.similarities.BM25Similarity;
+import org.apache.lucene.search.similarities.ClassicSimilarity;
 //import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.queryparser.classic.QueryParser;
@@ -39,17 +41,35 @@ public class QueryIndex
 	public static void main(String[] args) throws IOException, ParseException
 	{
 		// Analyzer used by the query parser. Must be the same as the one used when creating the index
-		Analyzer analyzer = new StandardAnalyzer();
-		Directory directory = FSDirectory.open(Paths.get(INDEX_DIRECTORY));
-		
+		String analyzerType = args[2].toLowerCase();
+		Analyzer analyzer;
+		if(analyzerType.equals("standard")){
+			analyzer = new EnglishAnalyzer();
+		} else if (analyzerType.equals("english")){
+			analyzer = new StandardAnalyzer();
+		} else {
+			analyzer = null;
+			System.out.println("Invalid analyzer type.");
+			System.exit(1);
+		}
+
 		// create objects to read and search across the index
+		Directory directory = FSDirectory.open(Paths.get(INDEX_DIRECTORY));
 		DirectoryReader ireader = DirectoryReader.open(directory);
 		IndexSearcher isearcher = new IndexSearcher(ireader);
-		
+		String similarity = args[3].toLowerCase();
+		if(similarity.equals("classic") || similarity.equals("vsm")) {
+			isearcher.setSimilarity(new ClassicSimilarity());
+		} else if(similarity.equals("bm25")) {
+			isearcher.setSimilarity(new BM25Similarity());			
+		} else {
+			System.out.println("Invalid similarity type.");
+			System.exit(1);		
+		}
+
 		// Create the query parser. The default search field is "content", but
 		// we can use this to search across any field
 		QueryParser parser = new QueryParser("contents", analyzer);
-
 
 		FileWriter fw = new FileWriter("./results.txt", false);
 		BufferedWriter bw = new BufferedWriter(fw);
@@ -62,7 +82,7 @@ public class QueryIndex
 		for(int i=0; i < queryList.size(); i++)
 		{
 			queryId = queryList.get(i).getQueryId();
-			queryString = queryList.get(i).getText().replace('?', ' ').trim();
+			queryString = queryList.get(i).getText().replace("?", "\\?").trim();
 
 			if (queryString.length() > 0)
 			{
@@ -77,13 +97,13 @@ public class QueryIndex
 				{
 					Document hitDoc = isearcher.doc(hits[j].doc);
 					String result = (queryId + " Q0 " + hitDoc.get("id") + " " + (i + 1) + " " + hits[j].score + " STANDARD");
-					System.out.println(result);
+					//System.out.println(result);
 					bw.write(result);
 					bw.newLine();
 				}
 			}
 			
-			System.out.print(">>> ");
+			//System.out.print(">>> ");
 		}
 		
 		bw.close();

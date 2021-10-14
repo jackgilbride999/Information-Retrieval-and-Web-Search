@@ -7,6 +7,8 @@ import java.util.List;
 import java.nio.file.Paths;
 
 import org.apache.lucene.analysis.Analyzer;
+//import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -26,16 +28,23 @@ public class CreateIndex
 	public static void main(String[] args) throws IOException
 	{
 		// Make sure we were given something to index
-		if (args.length <= 1)
+		if (args.length <= 3)
 		{
-            System.out.println("Expected filenames as input");
+            System.out.println("Invalid number of arguments");
             System.exit(1);            
         }
 
-		List<CranfieldDocument> documentList = CranFileReader.getDocumentList(args[0]);
-
-		// Analyzer that is used to process TextField
-		Analyzer analyzer = new StandardAnalyzer();
+		String analyzerType = args[2].toLowerCase();
+		Analyzer analyzer;
+		if(analyzerType.equals("standard")){
+			analyzer = new EnglishAnalyzer();
+		} else if (analyzerType.equals("english")){
+			analyzer = new StandardAnalyzer();
+		} else {
+			analyzer = null;
+			System.out.println("Invalid analyzer type.");
+			System.exit(1);
+		}
 
 		// Open the directory that contains the search index
 		Directory directory = FSDirectory.open(Paths.get(INDEX_DIRECTORY));
@@ -45,6 +54,7 @@ public class CreateIndex
 		config.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
 		IndexWriter iwriter = new IndexWriter(directory, config);
 		
+		List<CranfieldDocument> documentList = CranFileReader.getDocumentList(args[0]);
 		for(int i = 0; i < documentList.size(); i++)
 		{
 			CranfieldDocument document = documentList.get(i);
@@ -62,5 +72,11 @@ public class CreateIndex
 		// Commit everything and close
 		iwriter.close();
 		directory.close();
+
+		try {
+			QueryIndex.main(args);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }
