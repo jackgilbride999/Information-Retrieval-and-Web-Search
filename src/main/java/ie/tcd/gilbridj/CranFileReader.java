@@ -93,7 +93,7 @@ public class CranFileReader {
             queryList.add(new CranfieldQuery(Integer.parseInt(splitQueryString[0].trim()), splitQueryString[1]));
         //    System.out.print(i);
         }
-       // System.out.println("success");
+        System.out.println("success");
         return queryList;
     }
 }

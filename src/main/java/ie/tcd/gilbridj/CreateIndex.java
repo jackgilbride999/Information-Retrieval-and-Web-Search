@@ -7,7 +7,6 @@ import java.util.List;
 import java.nio.file.Paths;
 
 import org.apache.lucene.analysis.Analyzer;
-//import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -19,6 +18,8 @@ import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
+import org.apache.lucene.search.similarities.BM25Similarity;
+import org.apache.lucene.search.similarities.ClassicSimilarity;
  
 public class CreateIndex
 {
@@ -52,7 +53,17 @@ public class CreateIndex
 		// Set up an index writer to add process and save documents to the index
 		IndexWriterConfig config = new IndexWriterConfig(analyzer);
 		config.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
+		String similarity = args[3].toLowerCase();
+		if(similarity.equals("classic") || similarity.equals("vsm")) {
+			config.setSimilarity(new ClassicSimilarity());
+		} else if(similarity.equals("bm25")) {
+			config.setSimilarity(new BM25Similarity());			
+		} else {
+			System.out.println("Invalid similarity type.");
+			System.exit(1);		
+		}
 		IndexWriter iwriter = new IndexWriter(directory, config);
+
 		
 		List<CranfieldDocument> documentList = CranFileReader.getDocumentList(args[0]);
 		for(int i = 0; i < documentList.size(); i++)
@@ -62,7 +73,7 @@ public class CreateIndex
 
 			luceneDocument.add(new StringField("id", String.valueOf(document.getDocumentId()), Field.Store.YES));
 			luceneDocument.add(new TextField("title", document.getTitle(), Field.Store.YES));
-			luceneDocument.add(new TextField("contents", document.getTitle() + " " + document.getWords(), Field.Store.YES));
+			luceneDocument.add(new TextField("contents", document.getWords(), Field.Store.YES));
 
 			if (iwriter.getConfig().getOpenMode() == OpenMode.CREATE) {
 				iwriter.addDocument(luceneDocument);

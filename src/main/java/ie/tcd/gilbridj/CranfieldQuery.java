@@ -8,6 +8,7 @@ public class CranfieldQuery {
     public CranfieldQuery(int queryId, String text){
         this.queryId = queryId;
         this.text = text;
+      //  System.out.println("Created query " + queryId + ": " + text);
     }
 
     public int getQueryId(){

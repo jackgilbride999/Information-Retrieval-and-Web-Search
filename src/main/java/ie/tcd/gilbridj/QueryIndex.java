@@ -71,18 +71,18 @@ public class QueryIndex
 		// we can use this to search across any field
 		QueryParser parser = new QueryParser("contents", analyzer);
 
+		//String[] fields = {"title", "contents", "author"};
+		//MultiFieldQueryParser parser = new MultiFieldQueryParser(fields, analyzer);
+
 		FileWriter fw = new FileWriter("./results.txt", false);
 		BufferedWriter bw = new BufferedWriter(fw);
 
 		List<CranfieldQuery> queryList = CranFileReader.getQueryList(args[1]);
 		
-		String queryString = "";
-		int queryId;
-
 		for(int i=0; i < queryList.size(); i++)
 		{
-			queryId = queryList.get(i).getQueryId();
-			queryString = queryList.get(i).getText().replace("?", "\\?").trim();
+			int queryId = queryList.get(i).getQueryId();
+			String queryString = queryList.get(i).getText().replace("?", "\\?").trim();
 
 			if (queryString.length() > 0)
 			{
@@ -102,7 +102,6 @@ public class QueryIndex
 					bw.newLine();
 				}
 			}
-			
 			//System.out.print(">>> ");
 		}
 		
