@@ -19,7 +19,7 @@ public class CranFileReader {
             String line;
             while ((line = br.readLine()) != null) {
                 sb.append(line);
-                sb.append(" ");
+    //            sb.append(" ");
             }
         
             String fileContent = sb.toString();
@@ -54,7 +54,23 @@ public class CranFileReader {
 
         String[] delimiters = {".T", ".A", ".B", ".W"};
 		ArrayList<String> docContents = new ArrayList<String>();
+/*
+        String[] splitString = documentString.split(".T");
+        docContents.add(splitString[0]);
+        documentString = splitString[1];
 
+        splitString = documentString.split(".A");
+        docContents.add(splitString[0]);
+        documentString = splitString[1];
+
+        splitString = documentString.split(".B");
+        docContents.add(splitString[0]);
+        documentString = splitString[1];
+
+        splitString = documentString.split(".W");
+        docContents.add(splitString[0]);
+        docContents.add(splitString[1]);
+*/
         for(int i = 0; i < delimiters.length; i++){
 
             if(!documentString.equals(".W") && !delimiters[i].equals(".W")) {
@@ -79,6 +95,7 @@ public class CranFileReader {
         }
 
         return new CranfieldDocument(docContents);
+        //return null;
     }
 
     public static List<CranfieldQuery> getQueryList(String path){

@@ -36,7 +36,7 @@ public class QueryIndex
 	private static String INDEX_DIRECTORY = "./index";
 	
 	// Limit the number of search results we get
-	private static int MAX_RESULTS = 10;
+	private static int MAX_RESULTS = 20;
 	
 	public static void main(String[] args) throws IOException, ParseException
 	{
@@ -71,8 +71,9 @@ public class QueryIndex
 		// we can use this to search across any field
 		QueryParser parser = new QueryParser("contents", analyzer);
 
-		//String[] fields = {"title", "contents", "author"};
+		//String[] fields = {"title", "contents", "author", "biblography", "id"};
 		//MultiFieldQueryParser parser = new MultiFieldQueryParser(fields, analyzer);
+
 
 		FileWriter fw = new FileWriter("./results.txt", false);
 		BufferedWriter bw = new BufferedWriter(fw);
@@ -82,7 +83,7 @@ public class QueryIndex
 		for(int i=0; i < queryList.size(); i++)
 		{
 			int queryId = queryList.get(i).getQueryId();
-			String queryString = queryList.get(i).getText().replace("?", "\\?").trim();
+			String queryString = QueryParser.escape(queryList.get(i).getText()).trim();
 
 			if (queryString.length() > 0)
 			{
@@ -104,6 +105,7 @@ public class QueryIndex
 			}
 			//System.out.print(">>> ");
 		}
+		System.out.println(queryList.size() + "!");
 		
 		bw.close();
 		fw.close();

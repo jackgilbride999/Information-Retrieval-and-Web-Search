@@ -73,12 +73,17 @@ public class CreateIndex
 
 			luceneDocument.add(new StringField("id", String.valueOf(document.getDocumentId()), Field.Store.YES));
 			luceneDocument.add(new TextField("title", document.getTitle(), Field.Store.YES));
+			luceneDocument.add(new TextField("authors", document.getAuthors(), Field.Store.YES));
+			luceneDocument.add(new TextField("bibliography", document.getBibliography(), Field.Store.YES));
 			luceneDocument.add(new TextField("contents", document.getWords(), Field.Store.YES));
 
 			if (iwriter.getConfig().getOpenMode() == OpenMode.CREATE) {
 				iwriter.addDocument(luceneDocument);
 			}
 		}
+
+		System.out.println(documentList.size());
+
 
 		// Commit everything and close
 		iwriter.close();
