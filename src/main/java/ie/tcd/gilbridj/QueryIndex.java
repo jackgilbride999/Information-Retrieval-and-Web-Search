@@ -26,6 +26,7 @@ import org.apache.lucene.search.similarities.BM25Similarity;
 import org.apache.lucene.search.similarities.ClassicSimilarity;
 //import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.queryparser.classic.ParseException;
 
@@ -36,7 +37,7 @@ public class QueryIndex
 	private static String INDEX_DIRECTORY = "./index";
 	
 	// Limit the number of search results we get
-	private static int MAX_RESULTS = 20;
+	private static int MAX_RESULTS = 1000;
 	
 	public static void main(String[] args) throws IOException, ParseException
 	{
@@ -69,10 +70,10 @@ public class QueryIndex
 
 		// Create the query parser. The default search field is "content", but
 		// we can use this to search across any field
-		QueryParser parser = new QueryParser("contents", analyzer);
+		//QueryParser parser = new QueryParser("contents", analyzer);
 
-		//String[] fields = {"title", "contents", "author", "biblography", "id"};
-		//MultiFieldQueryParser parser = new MultiFieldQueryParser(fields, analyzer);
+		String[] fields = {"title", "contents"};
+		MultiFieldQueryParser parser = new MultiFieldQueryParser(fields, analyzer);
 
 
 		FileWriter fw = new FileWriter("./results.txt", false);
@@ -92,12 +93,12 @@ public class QueryIndex
 
 				// Get the set of results
 				ScoreDoc[] hits = isearcher.search(query, MAX_RESULTS).scoreDocs;
-
+				
 				// Print the results
 				for (int j = 0; j < hits.length; j++)
 				{
 					Document hitDoc = isearcher.doc(hits[j].doc);
-					String result = (queryId + " Q0 " + hitDoc.get("id") + " " + (i + 1) + " " + hits[j].score + " STANDARD");
+					String result = ((i+1) + " Q0 " + hitDoc.get("id") + " " + (j + 1) + " " + hits[j].score + " STANDARD");
 					//System.out.println(result);
 					bw.write(result);
 					bw.newLine();
