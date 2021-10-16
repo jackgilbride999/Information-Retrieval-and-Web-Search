@@ -16,7 +16,6 @@ public class CranfieldDocument {
         this.authors = authors;
         this.bibliograpy = bibliography;
         this.words = words;
-   //     System.out.println("Created document " + documentId + ": " + title + " BY " + authors + ": " + words + ". bib: " + bibliography);
     }
 
     public CranfieldDocument(ArrayList<String> docContents) {

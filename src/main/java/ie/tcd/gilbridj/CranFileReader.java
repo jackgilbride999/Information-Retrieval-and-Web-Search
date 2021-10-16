@@ -43,9 +43,7 @@ public class CranFileReader {
         // skip first item in array as it is empty
         for(int i = 1; i < separatedFile.length; i++) {
             documentList.add(createCranfieldDocumentObject(separatedFile[i]));
-        //    System.out.print(i);
         }
-     //   System.out.println("success");
 
         return documentList;
     }
@@ -54,23 +52,7 @@ public class CranFileReader {
 
         String[] delimiters = {".T", ".A", ".B", ".W"};
 		ArrayList<String> docContents = new ArrayList<String>();
-/*
-        String[] splitString = documentString.split(".T");
-        docContents.add(splitString[0]);
-        documentString = splitString[1];
 
-        splitString = documentString.split(".A");
-        docContents.add(splitString[0]);
-        documentString = splitString[1];
-
-        splitString = documentString.split(".B");
-        docContents.add(splitString[0]);
-        documentString = splitString[1];
-
-        splitString = documentString.split(".W");
-        docContents.add(splitString[0]);
-        docContents.add(splitString[1]);
-*/
         for(int i = 0; i < delimiters.length; i++){
 
             if(!documentString.equals(".W") && !delimiters[i].equals(".W")) {
@@ -95,7 +77,6 @@ public class CranFileReader {
         }
 
         return new CranfieldDocument(docContents);
-        //return null;
     }
 
     public static List<CranfieldQuery> getQueryList(String path){
@@ -108,9 +89,7 @@ public class CranFileReader {
         for(int i = 1; i < separatedFile.length; i++) {
             String[] splitQueryString = separatedFile[i].split(".W");
             queryList.add(new CranfieldQuery(Integer.parseInt(splitQueryString[0].trim()), splitQueryString[1]));
-        //    System.out.print(i);
         }
-        System.out.println("success");
         return queryList;
     }
 }

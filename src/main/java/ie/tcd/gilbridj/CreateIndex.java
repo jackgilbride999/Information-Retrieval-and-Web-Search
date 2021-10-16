@@ -82,9 +82,6 @@ public class CreateIndex
 			}
 		}
 
-		System.out.println(documentList.size());
-
-
 		// Commit everything and close
 		iwriter.close();
 		directory.close();

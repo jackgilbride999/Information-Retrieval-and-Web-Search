@@ -4,7 +4,6 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
-//import java.util.Scanner;
 import java.util.List;
 
 import java.nio.file.Paths;
@@ -17,16 +16,13 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
-//import org.apache.lucene.index.Term;
 import org.apache.lucene.index.DirectoryReader;
 
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.similarities.BM25Similarity;
 import org.apache.lucene.search.similarities.ClassicSimilarity;
-//import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.QueryParser;
 import org.apache.lucene.queryparser.classic.ParseException;
 
@@ -72,8 +68,7 @@ public class QueryIndex
 		// we can use this to search across any field
 		//QueryParser parser = new QueryParser("contents", analyzer);
 
-		String[] fields = {"title", "contents"};
-		MultiFieldQueryParser parser = new MultiFieldQueryParser(fields, analyzer);
+		QueryParser parser = new QueryParser("contents", analyzer);
 
 
 		FileWriter fw = new FileWriter("./results.txt", false);
@@ -83,8 +78,7 @@ public class QueryIndex
 		
 		for(int i=0; i < queryList.size(); i++)
 		{
-			int queryId = queryList.get(i).getQueryId();
-			String queryString = QueryParser.escape(queryList.get(i).getText()).trim();
+			String queryString = QueryParser.escape(queryList.get(i).getText());
 
 			if (queryString.length() > 0)
 			{
@@ -99,14 +93,11 @@ public class QueryIndex
 				{
 					Document hitDoc = isearcher.doc(hits[j].doc);
 					String result = ((i+1) + " Q0 " + hitDoc.get("id") + " " + (j + 1) + " " + hits[j].score + " STANDARD");
-					//System.out.println(result);
 					bw.write(result);
 					bw.newLine();
 				}
 			}
-			//System.out.print(">>> ");
 		}
-		System.out.println(queryList.size() + "!");
 		
 		bw.close();
 		fw.close();
