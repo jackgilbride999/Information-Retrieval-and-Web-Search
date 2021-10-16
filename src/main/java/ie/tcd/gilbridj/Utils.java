@@ -62,6 +62,18 @@ public class Utils {
     }
 
     public static CustomAnalyzer createCustomAnalyzer(){
-		return CustomAnalyzer.builder().build();
+		try {
+			return CustomAnalyzer.builder()
+			.withTokenizer("standard")
+			.addTokenFilter("lowercase")
+			.addTokenFilter("stop")
+			.addTokenFilter("englishPossessive")
+			.addTokenFilter("kStem")
+			.build();
+		} catch (Exception e){
+			e.printStackTrace();
+			System.exit(1);
+			return null;
+		}
 	}
 }

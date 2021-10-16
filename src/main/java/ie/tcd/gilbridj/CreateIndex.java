@@ -24,6 +24,13 @@ public class CreateIndex
 
 	public static void main(String[] args) throws IOException
 	{
+
+	/*	Set<String> availableTokenizers = TokenizerFactory.availableTokenizers();
+		for(String t:availableTokenizers){
+			System.out.print(t + "\n");
+		}
+*/
+
 		// Make sure we were given something to index
 		if (args.length <= 3)
 		{
