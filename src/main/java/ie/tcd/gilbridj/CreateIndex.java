@@ -7,8 +7,6 @@ import java.util.List;
 import java.nio.file.Paths;
 
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.en.EnglishAnalyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.TextField;
@@ -18,8 +16,6 @@ import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.index.IndexWriterConfig.OpenMode;
-import org.apache.lucene.search.similarities.BM25Similarity;
-import org.apache.lucene.search.similarities.ClassicSimilarity;
  
 public class CreateIndex
 {
@@ -36,16 +32,7 @@ public class CreateIndex
         }
 
 		String analyzerType = args[2].toLowerCase();
-		Analyzer analyzer;
-		if(analyzerType.equals("standard")){
-			analyzer = new EnglishAnalyzer();
-		} else if (analyzerType.equals("english")){
-			analyzer = new StandardAnalyzer();
-		} else {
-			analyzer = null;
-			System.out.println("Invalid analyzer type.");
-			System.exit(1);
-		}
+		Analyzer analyzer = Utils.getAnalyzerFromType(analyzerType);
 
 		// Open the directory that contains the search index
 		Directory directory = FSDirectory.open(Paths.get(INDEX_DIRECTORY));
@@ -54,14 +41,7 @@ public class CreateIndex
 		IndexWriterConfig config = new IndexWriterConfig(analyzer);
 		config.setOpenMode(IndexWriterConfig.OpenMode.CREATE);
 		String similarity = args[3].toLowerCase();
-		if(similarity.equals("classic") || similarity.equals("vsm")) {
-			config.setSimilarity(new ClassicSimilarity());
-		} else if(similarity.equals("bm25")) {
-			config.setSimilarity(new BM25Similarity());			
-		} else {
-			System.out.println("Invalid similarity type.");
-			System.exit(1);		
-		}
+		Utils.setIndexWriterConfigSimilarity(config, similarity);
 		IndexWriter iwriter = new IndexWriter(directory, config);
 
 		
