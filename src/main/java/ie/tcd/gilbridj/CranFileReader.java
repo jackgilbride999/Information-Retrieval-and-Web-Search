@@ -36,7 +36,7 @@ public class CranFileReader {
     public static List<CranfieldDocument> getDocumentList(String path){
 
         String cranAllFile = readFile(path);
-        String[] separatedFile = cranAllFile.split(".I");
+        String[] separatedFile = cranAllFile.split(Constants.ID);
 
         List<CranfieldDocument> documentList = new ArrayList<CranfieldDocument>();
         // skip first item in array as it is empty
@@ -50,29 +50,29 @@ public class CranFileReader {
     private static CranfieldDocument createCranfieldDocumentObject(String documentString) {
 
         String[] delimiters = {
-            Constants.TITLE_SEPARATOR,
-            Constants.AUTHOR_SEPARATOR,
-            Constants.BIBLIOGRAPHY_SEPARATOR, 
-            Constants.WORDS_SEPARATOR
+            Constants.TITLE,
+            Constants.AUTHOR,
+            Constants.BIBLIOGRAPHY, 
+            Constants.WORDS
         };
 		ArrayList<String> docContents = new ArrayList<String>();
 
         for(int i = 0; i < delimiters.length; i++){
 
-            if(!documentString.equals(Constants.WORDS_SEPARATOR) && !delimiters[i].equals(Constants.WORDS_SEPARATOR)) {
+            if(!documentString.equals(Constants.WORDS) && !delimiters[i].equals(Constants.WORDS)) {
                 // this is the base case
                 // split on the delimiter, add the left hand side to the list
                 //   and continue operating on the right hand side
                 docContents.add(documentString.split(delimiters[i])[0]);
                 documentString = documentString.split(delimiters[i])[1];
             }
-            else if(documentString.equals(Constants.WORDS_SEPARATOR)){
-                // this is the case where the entire remaining string equals ".W"
-                // i.e. there is no words or bibliography
+            else if(documentString.equals(Constants.WORDS)){
+                // edge case where the entire remaining string equals ".W"
+                // i.e. there is no biblography before .W, and no words after it
                 // add blank arguments
                 docContents.add("");
                 docContents.add("");
-            } else if (delimiters[i].equals(Constants.WORDS_SEPARATOR)) {
+            } else if (delimiters[i].equals(Constants.WORDS)) {
                 // we have reached the ".W" delimiter and there is a bibliography
                 // and words to add, so add them
                 docContents.add(documentString.split(delimiters[i])[0]);
@@ -86,12 +86,12 @@ public class CranFileReader {
     public static List<CranfieldQuery> getQueryList(String path){
         
         String cranQryFile = readFile(path);
-        String[] separatedFile = cranQryFile.split(Constants.INDEX_SEPARATOR);
+        String[] separatedFile = cranQryFile.split(Constants.ID);
 
         List<CranfieldQuery> queryList = new ArrayList<CranfieldQuery>();
         // skip first item in array as it is empty
         for(int i = 1; i < separatedFile.length; i++) {
-            String[] splitQueryString = separatedFile[i].split(Constants.WORDS_SEPARATOR);
+            String[] splitQueryString = separatedFile[i].split(Constants.WORDS);
             queryList.add(new CranfieldQuery(Integer.parseInt(splitQueryString[0].trim()), splitQueryString[1]));
         }
         return queryList;

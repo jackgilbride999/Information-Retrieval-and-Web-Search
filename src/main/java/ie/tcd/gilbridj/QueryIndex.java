@@ -48,7 +48,7 @@ public class QueryIndex
 		BufferedWriter bw = new BufferedWriter(fw);
 
 		List<CranfieldQuery> queryList = CranFileReader.getQueryList(args[1]);
-		QueryParser parser = new QueryParser("contents", analyzer);
+		QueryParser parser = new QueryParser(Constants.WORDS, analyzer);
 
 		for(int i=0; i < queryList.size(); i++)
 		{
@@ -62,7 +62,7 @@ public class QueryIndex
 				for (int j = 0; j < hits.length; j++)
 				{
 					Document hitDoc = isearcher.doc(hits[j].doc);
-					String result = ((i+1) + " Q0 " + hitDoc.get("id") + " " + (j + 1) + " " + hits[j].score + " STANDARD");
+					String result = ((i+1) + " Q0 " + hitDoc.get(Constants.ID) + " " + (j + 1) + " " + hits[j].score + " STANDARD");
 					bw.write(result);
 					bw.newLine();
 				}

@@ -24,13 +24,6 @@ public class CreateIndex
 
 	public static void main(String[] args) throws IOException
 	{
-
-	/*	Set<String> availableTokenizers = TokenizerFactory.availableTokenizers();
-		for(String t:availableTokenizers){
-			System.out.print(t + "\n");
-		}
-*/
-
 		// Make sure we were given something to index
 		if (args.length <= 3)
 		{
@@ -58,11 +51,11 @@ public class CreateIndex
 			CranfieldDocument document = documentList.get(i);
 			Document luceneDocument = new Document();
 
-			luceneDocument.add(new StringField("id", String.valueOf(document.getDocumentId()), Field.Store.YES));
-			luceneDocument.add(new TextField("title", document.getTitle(), Field.Store.YES));
-			luceneDocument.add(new TextField("authors", document.getAuthors(), Field.Store.YES));
-			luceneDocument.add(new TextField("bibliography", document.getBibliography(), Field.Store.YES));
-			luceneDocument.add(new TextField("contents", document.getWords(), Field.Store.YES));
+			luceneDocument.add(new StringField(Constants.ID, String.valueOf(document.getDocumentId()), Field.Store.YES));
+			luceneDocument.add(new TextField(Constants.TITLE, document.getTitle(), Field.Store.YES));
+			luceneDocument.add(new TextField(Constants.AUTHOR, document.getAuthors(), Field.Store.YES));
+			luceneDocument.add(new TextField(Constants.BIBLIOGRAPHY, document.getBibliography(), Field.Store.YES));
+			luceneDocument.add(new TextField(Constants.WORDS, document.getWords(), Field.Store.YES));
 
 			if (iwriter.getConfig().getOpenMode() == OpenMode.CREATE) {
 				iwriter.addDocument(luceneDocument);
