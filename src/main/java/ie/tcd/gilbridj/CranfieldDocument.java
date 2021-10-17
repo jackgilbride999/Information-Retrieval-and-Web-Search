@@ -10,6 +10,13 @@ public class CranfieldDocument {
     private String bibliograpy;
     private String words;
 
+    public CranfieldDocument(){
+        this.title = "";
+        this.authors = "";
+        this.bibliograpy = "";
+        this.words = "";
+    }
+
     public CranfieldDocument(int documentId, String title, String authors, String bibliography, String words){
         this.documentId = documentId;
         this.title = title;

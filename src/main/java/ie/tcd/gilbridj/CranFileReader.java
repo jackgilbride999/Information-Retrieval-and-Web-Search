@@ -18,7 +18,7 @@ public class CranFileReader {
             StringBuilder sb = new StringBuilder();
             String line;
             while ((line = br.readLine()) != null) {
-                sb.append(line);
+                sb.append(line + " ") ;
             }
         
             String fileContent = sb.toString();
@@ -59,20 +59,14 @@ public class CranFileReader {
 
         for(int i = 0; i < delimiters.length; i++){
 
-            if(!documentString.equals(Constants.WORDS) && !delimiters[i].equals(Constants.WORDS)) {
+            if(!delimiters[i].equals(Constants.WORDS)) {
                 // this is the base case
                 // split on the delimiter, add the left hand side to the list
                 //   and continue operating on the right hand side
                 docContents.add(documentString.split(delimiters[i])[0]);
                 documentString = documentString.split(delimiters[i])[1];
             }
-            else if(documentString.equals(Constants.WORDS)){
-                // edge case where the entire remaining string equals ".W"
-                // i.e. there is no biblography before .W, and no words after it
-                // add blank arguments
-                docContents.add("");
-                docContents.add("");
-            } else if (delimiters[i].equals(Constants.WORDS)) {
+            else {
                 // we have reached the ".W" delimiter and there is a bibliography
                 // and words to add, so add them
                 docContents.add(documentString.split(delimiters[i])[0]);

@@ -1,8 +1,14 @@
 package ie.tcd.gilbridj;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.core.LowerCaseFilterFactory;
+import org.apache.lucene.analysis.core.StopFilterFactory;
+import org.apache.lucene.analysis.core.WhitespaceTokenizerFactory;
 import org.apache.lucene.analysis.custom.CustomAnalyzer;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
+import org.apache.lucene.analysis.en.EnglishPossessiveFilterFactory;
+import org.apache.lucene.analysis.en.PorterStemFilterFactory;
+import org.apache.lucene.analysis.miscellaneous.KeywordMarkerFilterFactory;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.search.IndexSearcher;
@@ -64,11 +70,12 @@ public class Utils {
     public static CustomAnalyzer createCustomAnalyzer(){
 		try {
 			return CustomAnalyzer.builder()
-			.withTokenizer("standard")
-			.addTokenFilter("lowercase")
-			.addTokenFilter("stop")
-			.addTokenFilter("englishPossessive")
-			.addTokenFilter("kStem")
+			.withTokenizer(WhitespaceTokenizerFactory.NAME)
+			.addTokenFilter(LowerCaseFilterFactory.NAME)
+			.addTokenFilter(StopFilterFactory.NAME)
+			.addTokenFilter(EnglishPossessiveFilterFactory.NAME)
+			.addTokenFilter(KeywordMarkerFilterFactory.NAME)
+			.addTokenFilter(PorterStemFilterFactory.NAME)
 			.build();
 		} catch (Exception e){
 			e.printStackTrace();

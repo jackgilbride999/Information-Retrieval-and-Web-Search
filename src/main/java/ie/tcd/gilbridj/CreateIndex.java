@@ -15,7 +15,6 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
-import org.apache.lucene.index.IndexWriterConfig.OpenMode;
  
 public class CreateIndex
 {
@@ -57,8 +56,11 @@ public class CreateIndex
 			luceneDocument.add(new TextField(Constants.BIBLIOGRAPHY, document.getBibliography(), Field.Store.YES));
 			luceneDocument.add(new TextField(Constants.WORDS, document.getWords(), Field.Store.YES));
 
-			if (iwriter.getConfig().getOpenMode() == OpenMode.CREATE) {
+			try {
 				iwriter.addDocument(luceneDocument);
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.exit(1);
 			}
 		}
 
