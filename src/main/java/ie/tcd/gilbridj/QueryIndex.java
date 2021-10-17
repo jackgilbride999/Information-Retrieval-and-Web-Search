@@ -24,36 +24,29 @@ import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.ParseException;
 
 public class QueryIndex
-{
-
-	// the location of the search index
-	private static String INDEX_DIRECTORY = "./index";
-	
-	// Limit the number of search results we get
-	private static int MAX_RESULTS = 1000;
-	
+{		
 	public static void main(String[] args) throws IOException, ParseException
 	{
 		String analyzerType = args[2].toLowerCase();
 		Analyzer analyzer = Utils.getAnalyzerFromType(analyzerType);
 
 		// create objects to read and search across the index
-		Directory directory = FSDirectory.open(Paths.get(INDEX_DIRECTORY));
+		Directory directory = FSDirectory.open(Paths.get(Constants.INDEX_DIRECTORY));
 		DirectoryReader ireader = DirectoryReader.open(directory);
 		IndexSearcher isearcher = new IndexSearcher(ireader);
 		String similarity = args[3].toLowerCase();
 
 		Utils.setIndexSearcherSimilarity(isearcher, similarity);
 
-		FileWriter fw = new FileWriter("./results.txt", false);
+		FileWriter fw = new FileWriter(Constants.RESULTS_PATH, false);
 		BufferedWriter bw = new BufferedWriter(fw);
 
 		List<CranfieldQuery> queryList = CranFileReader.getQueryList(args[1]);
 		String[] fields = {Constants.TITLE, Constants.WORDS};
-		HashMap<String, Float> map = new HashMap<>();
-		map.put(Constants.TITLE, (float)0.33);
-		map.put(Constants.WORDS, (float)0.67);
-		MultiFieldQueryParser parser = new MultiFieldQueryParser(fields, analyzer, map);
+		HashMap<String, Float> weightMap = new HashMap<>();
+		weightMap.put(Constants.TITLE, (float)0.33);
+		weightMap.put(Constants.WORDS, (float)0.67);
+		MultiFieldQueryParser parser = new MultiFieldQueryParser(fields, analyzer, weightMap);
 
 		for(int i=0; i < queryList.size(); i++)
 		{
@@ -62,7 +55,7 @@ public class QueryIndex
 			if (queryString.length() > 0)
 			{
 				Query query = parser.parse(queryString);
-				ScoreDoc[] hits = isearcher.search(query, MAX_RESULTS).scoreDocs;
+				ScoreDoc[] hits = isearcher.search(query, Constants.MAX_RESULTS).scoreDocs;
 				
 				for (int j = 0; j < hits.length; j++)
 				{
@@ -79,6 +72,4 @@ public class QueryIndex
 		ireader.close();
 		directory.close();
 	}
-
-
 }

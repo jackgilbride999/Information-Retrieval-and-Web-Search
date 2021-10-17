@@ -18,9 +18,6 @@ import org.apache.lucene.store.FSDirectory;
  
 public class CreateIndex
 {
-	// Directory where the search index will be saved
-	private static String INDEX_DIRECTORY = "./index";
-
 	public static void main(String[] args) throws IOException
 	{
 		// Make sure we were given something to index
@@ -34,7 +31,7 @@ public class CreateIndex
 		Analyzer analyzer = Utils.getAnalyzerFromType(analyzerType);
 
 		// Open the directory that contains the search index
-		Directory directory = FSDirectory.open(Paths.get(INDEX_DIRECTORY));
+		Directory directory = FSDirectory.open(Paths.get(Constants.INDEX_DIRECTORY));
 
 		// Set up an index writer to add process and save documents to the index
 		IndexWriterConfig config = new IndexWriterConfig(analyzer);

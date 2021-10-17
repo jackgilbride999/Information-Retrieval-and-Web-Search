@@ -15,4 +15,8 @@ public class Constants {
     public static final String BIBLIOGRAPHY = ".B";
     public static final String WORDS = ".W";
 
+    public static final String INDEX_DIRECTORY = "./index";
+    public static final String RESULTS_PATH = "./results.txt";
+
+    public static int MAX_RESULTS = 1000;
 }
