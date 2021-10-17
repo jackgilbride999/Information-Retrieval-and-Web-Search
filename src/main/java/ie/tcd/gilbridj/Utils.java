@@ -3,13 +3,13 @@ package ie.tcd.gilbridj;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.core.LowerCaseFilterFactory;
 import org.apache.lucene.analysis.core.StopFilterFactory;
-import org.apache.lucene.analysis.core.WhitespaceTokenizerFactory;
 import org.apache.lucene.analysis.custom.CustomAnalyzer;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.analysis.en.EnglishPossessiveFilterFactory;
 import org.apache.lucene.analysis.en.PorterStemFilterFactory;
 import org.apache.lucene.analysis.miscellaneous.KeywordMarkerFilterFactory;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.analysis.standard.StandardTokenizerFactory;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.similarities.BM25Similarity;
@@ -70,7 +70,7 @@ public class Utils {
     public static CustomAnalyzer createCustomAnalyzer(){
 		try {
 			return CustomAnalyzer.builder()
-			.withTokenizer(WhitespaceTokenizerFactory.NAME)
+			.withTokenizer(StandardTokenizerFactory.NAME)
 			.addTokenFilter(LowerCaseFilterFactory.NAME)
 			.addTokenFilter(StopFilterFactory.NAME)
 			.addTokenFilter(EnglishPossessiveFilterFactory.NAME)

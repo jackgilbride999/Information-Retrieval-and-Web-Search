@@ -3,7 +3,7 @@ package ie.tcd.gilbridj;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-
+import java.util.HashMap;
 import java.util.List;
 
 import java.nio.file.Paths;
@@ -20,6 +20,7 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.queryparser.classic.QueryParser;
+import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.ParseException;
 
 public class QueryIndex
@@ -48,7 +49,11 @@ public class QueryIndex
 		BufferedWriter bw = new BufferedWriter(fw);
 
 		List<CranfieldQuery> queryList = CranFileReader.getQueryList(args[1]);
-		QueryParser parser = new QueryParser(Constants.WORDS, analyzer);
+		String[] fields = {Constants.TITLE, Constants.WORDS};
+		HashMap<String, Float> map = new HashMap<>();
+		map.put(Constants.TITLE, (float)0.33);
+		map.put(Constants.WORDS, (float)0.67);
+		MultiFieldQueryParser parser = new MultiFieldQueryParser(fields, analyzer, map);
 
 		for(int i=0; i < queryList.size(); i++)
 		{
