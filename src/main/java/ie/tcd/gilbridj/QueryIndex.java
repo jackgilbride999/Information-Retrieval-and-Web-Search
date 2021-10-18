@@ -48,6 +48,14 @@ public class QueryIndex
 		weightMap.put(Constants.WORDS, (float)0.67);
 		MultiFieldQueryParser parser = new MultiFieldQueryParser(fields, analyzer, weightMap);
 
+		int maxResults = 0;
+		try {
+			maxResults = Integer.parseInt(args[4]);
+		} catch (Exception e) {
+			System.out.println("Invalid argument. Max Results should be an integer");
+			System.exit(1);
+		}
+
 		for(int i=0; i < queryList.size(); i++)
 		{
 			String queryString = QueryParser.escape(queryList.get(i).getText());
@@ -55,7 +63,7 @@ public class QueryIndex
 			if (queryString.length() > 0)
 			{
 				Query query = parser.parse(queryString);
-				ScoreDoc[] hits = isearcher.search(query, Constants.MAX_RESULTS).scoreDocs;
+				ScoreDoc[] hits = isearcher.search(query, maxResults).scoreDocs;
 				
 				for (int j = 0; j < hits.length; j++)
 				{

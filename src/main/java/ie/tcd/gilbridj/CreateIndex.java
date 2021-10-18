@@ -21,7 +21,7 @@ public class CreateIndex
 	public static void main(String[] args) throws IOException
 	{
 		// Make sure we were given something to index
-		if (args.length <= 3)
+		if (args.length <= 4)
 		{
             System.out.println("Invalid number of arguments");
             System.exit(1);            
@@ -40,7 +40,6 @@ public class CreateIndex
 		Utils.setIndexWriterConfigSimilarity(config, similarity);
 		IndexWriter iwriter = new IndexWriter(directory, config);
 
-		
 		List<CranfieldDocument> documentList = CranFileReader.getDocumentList(args[0]);
 		for(int i = 0; i < documentList.size(); i++)
 		{
