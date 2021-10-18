@@ -74,5 +74,4 @@ public class CranfieldDocument {
     public void setWords(String words) {
         this.words = words;
     }
-
 }
