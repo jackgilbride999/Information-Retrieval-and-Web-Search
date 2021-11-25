@@ -25,7 +25,8 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file pom.xml
     - name: Pull trec_eval
-      run:  git clone https://github.com/usnistgov/trec_eval.git
+      run: |  
+            git clone https://github.com/usnistgov/trec_eval.git
             cd trec_eval
             make
             cd ..
